@@ -11,7 +11,7 @@ COPY src /app/src
 RUN gradle bootWar --no-daemon -x test
 
 # 2. 실행 스테이지: 가벼운 JRE 환경에서 애플리케이션 실행
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
 # 빌드 스테이지에서 생성된 WAR 파일만 추출하여 복사
