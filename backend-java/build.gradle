@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '3.2.5' // 최신 안정화 버전
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'springChatbot'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // 1. Spring Boot Web (내장 톰캣 포함)
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // 2. JSP 및 JSTL (Jakarta EE 기준)
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api'
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl'
+
+    // 3. Database (MariaDB & MyBatis) - 버전 최신화
+    implementation 'org.mariadb.jdbc:mariadb-java-client' // 버전 명시 생략 시 관리 플러그인이 최적 버전 선택
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+
+    // 4. Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // 5. Development & Test
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // 도커 배포용 WAR 빌드를 위해 필요
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

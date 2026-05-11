@@ -1,0 +1,45 @@
+services:
+  # FastAPI (LLM 가공 및 중계)
+  llm-api:
+    build: ./backend-python
+    container_name: fastapi-app
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # 호스트 접속 허용 필수
+    environment:
+      - OLLAMA_HOST=host.docker.internal
+      - OLLAMA_PORT=11434
+    networks:
+      - chatbot-net
+
+  # Spring Boot (JSP UI 및 메인 로직)
+  java-app:
+    build: ./backend-java
+    container_name: spring-app
+    ports:
+      - "8087:8087"
+    depends_on:
+      - llm-api
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/test
+      - FASTAPI_URL=http://llm-api:8000
+    networks:
+      - chatbot-net
+
+  # MariaDB (데이터 저장)
+  db:
+    image: mariadb:10.6
+    container_name: chatbot-db
+    ports:
+      - "3307:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: root_password
+      MARIADB_DATABASE: test
+    networks:
+      - chatbot-net
+
+networks:
+  chatbot-net:
+    driver: bridge
