@@ -1,0 +1,16 @@
+# Java/Gradle 관련 제외
+.gradle/
+build/
+bin/
+*.class
+
+# Python 관련 제외
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 환경 변수 및 시스템 파일
+.env
+.DS_Store
+Thumbs.db
