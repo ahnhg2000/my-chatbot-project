@@ -26,7 +26,7 @@ class OllamaService:
 
         try:
             # 타임아웃을 설정하여 무한 대기를 방지합니다 (예: 60초)
-            response = requests.post(self.base_url, json=payload, timeout=60)
+            response = requests.post(self.base_url, json=payload, timeout=300)
             
             # HTTP 상태 코드가 200이 아니면 예외를 발생시킵니다.
             response.raise_for_status()
