@@ -19,4 +19,4 @@ COPY . .
 EXPOSE 8000
 
 # uvicorn 실행 (app.main:app은 프로젝트 진입점에 따라 수정 가능)
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
