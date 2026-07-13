@@ -7,8 +7,8 @@ services:
     ports:
       - "3307:3306"
     environment:
-      MARIADB_ROOT_PASSWORD: root_password
-      MARIADB_DATABASE: test
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
     volumes:
       - ./mariadb_data:/var/lib/mysql # 컨테이너 삭제 후에도 데이터 유지
     networks:
@@ -40,9 +40,9 @@ services:
       - db
       - llm-api
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/test
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root_password
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_ROOT_PASSWORD}
       - FASTAPI_URL=http://llm-api:8000
     networks:
       - chatbot-net

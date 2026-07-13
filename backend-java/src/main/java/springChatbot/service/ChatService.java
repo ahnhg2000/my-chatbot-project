@@ -3,7 +3,6 @@ package springChatbot.service;
 import springChatbot.dto.ChatRequest;
 import springChatbot.dto.ChatHistory;
 import springChatbot.mapper.ChatHistoryMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -20,13 +19,12 @@ public class ChatService {
     private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
 
     // 도커 네트워크 내 서비스 이름인 'llm-api'를 기본값으로 설정합니다.
-    @Value("${fastapi.url:http://llm-api:8000}")
+    @Value("${fastapi.url}")
     private String fastApiUrl;
 
     private final RestTemplate restTemplate;
     private final ChatHistoryMapper chatHistoryMapper;
 
-    @Autowired
     public ChatService(ChatHistoryMapper chatHistoryMapper, RestTemplateBuilder restTemplateBuilder) {
         /* * [주요 수정 사항]
          * CPU 환경에서 Ollama의 응답이 1분 이상 걸리는 문제를 해결하기 위해
