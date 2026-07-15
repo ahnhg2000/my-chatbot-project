@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    triggers {
+        // 2분마다 깃허브 저장소를 감시하여 새로운 커밋(Push)이 있으면 자동으로 빌드를 실행합니다.
+        pollSCM('*/2 * * * *')
+    }
+
     environment {
         // 환경 변수로 프로젝트명 정의
         PROJECT_NAME = 'spring-chatbot'
