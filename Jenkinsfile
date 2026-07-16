@@ -1,4 +1,5 @@
 pipeline {
+    // GitHub --> 기존 Docker 서비스를 내리고 최신 코드 다시 빌드 --> 성공 여부 확인 --> Slack으로 결과 알림
     agent any
 
     triggers {
