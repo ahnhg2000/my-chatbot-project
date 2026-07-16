@@ -24,7 +24,6 @@ pipeline {
         stage('Inject Environment File') {
             steps {
                 echo ">>> [STEP 2.5] 암호화된 자격 증명 파일로부터 .env 생성"
-                // Credential ID인 'chatbot-env-file'로 기입
                 withCredentials([file(credentialsId: 'chatbot-env-file', variable: 'SECRET_ENV')]) {
                     sh "cp \$SECRET_ENV .env"
                 }
@@ -46,11 +45,11 @@ pipeline {
         }
     }
 
+    // 빌드 결과에 따른 자동 사후 처리 (슬랙 알림 활성화)
     post {
         always {
             echo ">>> 모든 배포 절차가 완료되었습니다!"
         }
-        /* [임시 주석] 슬랙 플러그인 설정 및 도커 젠킨스 재시작이 완료되면 아래 주석(/*, */)을 지우고 사용하세요!
         success {
             slackSend (
                 channel: '#deploy-alerts',
@@ -65,6 +64,5 @@ pipeline {
                 message: "FAILURE: '${env.JOB_NAME} [${env.BUILD_NUMBER}]' 배포 중 오류가 발생했습니다. 로그를 확인해 주세요. (${env.BUILD_URL})"
             )
         }
-        */
     }
 }
