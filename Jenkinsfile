@@ -2,12 +2,11 @@ pipeline {
     agent any
 
     triggers {
-        // 2분마다 깃허브 저장소를 감시하여 새로운 커밋(Push)이 있으면 자동으로 빌드를 실행합니다.
+        // 2분마다 깃허브 저장소를 감시하여 새로운 커밋이 있으면 자동으로 빌드를 실행합니다.
         pollSCM('*/2 * * * *')
     }
 
     environment {
-        // 환경 변수로 프로젝트명 정의
         PROJECT_NAME = 'spring-chatbot'
     }
 
@@ -15,7 +14,6 @@ pipeline {
         stage('Clean Up') {
             steps {
                 echo ">>> [STEP 1] 기존 서비스 및 네트워크 정리"
-                // down 실패가 전체 파이프라인을 중단시키지 않도록 처리
                 sh "docker-compose -p ${PROJECT_NAME} down --remove-orphans || true"
 
                 echo ">>> [STEP 2] 미사용 이미지 정리 (용량 최적화)"
@@ -26,8 +24,8 @@ pipeline {
         stage('Inject Environment File') {
             steps {
                 echo ">>> [STEP 2.5] 암호화된 자격 증명 파일로부터 .env 생성"
-                // 1단계에서 등록한 ID('spring-chatbot-env')를 바인딩하여 안전하게 복사합니다.
-                withCredentials([file(credentialsId: 'spring-chatbot-env', variable: 'SECRET_ENV')]) {
+                // Credential ID인 'chatbot-env-file'로 기입
+                withCredentials([file(credentialsId: 'chatbot-env-file', variable: 'SECRET_ENV')]) {
                     sh "cp \$SECRET_ENV .env"
                 }
             }
@@ -48,11 +46,11 @@ pipeline {
         }
     }
 
-    // 빌드 결과에 따른 자동 사후 처리 (슬랙 알림 포함)
     post {
         always {
             echo ">>> 모든 배포 절차가 완료되었습니다!"
         }
+        /* [임시 주석] 슬랙 플러그인 설정 및 도커 젠킨스 재시작이 완료되면 아래 주석(/*, */)을 지우고 사용하세요!
         success {
             slackSend (
                 channel: '#deploy-alerts',
@@ -67,5 +65,6 @@ pipeline {
                 message: "FAILURE: '${env.JOB_NAME} [${env.BUILD_NUMBER}]' 배포 중 오류가 발생했습니다. 로그를 확인해 주세요. (${env.BUILD_URL})"
             )
         }
+        */
     }
 }
